@@ -36,7 +36,7 @@ namespace FileDictionaryTest
     {
         [Fact]
         public void Unpo() {
-            const int KOUNT = 10000;
+            const int KOUNT = 1000;
             var baseDir = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "../../work");
             var h = new FileDictionary<StringableString, StringableString>(Path.Combine(baseDir, "dic"), 2);
             h.Prepare();
@@ -82,10 +82,26 @@ namespace FileDictionaryTest
             foreach (var k in h) {
                 c++;
                 var ks = k.Key.Raw.Substring(1);
-                var vs = k.Key.Raw.Substring(1);
+                var vs = k.Value.Raw.Substring(1);
                 Assert.Equal(ks, vs);
             }
             Assert.Equal(KOUNT, c);
+
+            for (int i = KOUNT; i >= 0; --i) {
+                h.Remove(new StringableString($"K{i:000}"));
+                Assert.Equal(i, h.Count);
+            }
+            Assert.Empty(h);
+
+            for (int i = 0; i < KOUNT; ++i) {
+                var k = new StringableString($"K{i:000}");
+                Assert.False(h.ContainsKey(k));
+
+                StringableString s;
+                Assert.False(h.TryGetValue(k, out s));
+
+                Assert.Throws<KeyNotFoundException>(() => h[k]);
+            }
         }
     }
 }

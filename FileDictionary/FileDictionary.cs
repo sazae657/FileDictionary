@@ -200,7 +200,7 @@ namespace Com.Unkor {
         }
 
 
-        public bool RemoveKey(TKey key) {
+        bool RemoveKey(TKey key) {
             var hkey = Encoding.Default.GetBytes(key.ToString());
             var hk = sha512.ComputeHash(hkey);
 
