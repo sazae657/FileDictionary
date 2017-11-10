@@ -1,0 +1,11 @@
+Dictionary: Add 1567 msec
+Dictionary: heap 715603968 byte (682.5) MB
+Dictionary: Find 397 msec
+Dictionary: Remove 369 msec
+Dictionary: Iteration 2 msec
+
+FileDictionary: Add 836617 msec
+FileDictionary: heap 3665920 byte (3.5) MB
+Dictionary: Find 204582 msec
+Dictionary: Remove 389859 msec
+Dictionary: Iteration 7118 msec
