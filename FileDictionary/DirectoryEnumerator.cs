@@ -57,7 +57,8 @@ namespace Com.Unkor {
                 if (index >= dirMap.Count) {
                     return false;
                 }
-                files.AddRange(Directory.GetFiles(dirMap[index]));
+                files.AddRange(
+                    from s in Directory.GetFiles(dirMap[index]) where s.EndsWith(".key") select s);
                 index++;
             }
             if (files.Count == 0) {

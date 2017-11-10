@@ -21,7 +21,6 @@ namespace Com.Unkor {
         public string RootDirectory { get; private set; }
 
         string KeyRoot;
-        string ValueRoot;
         int count;
 
         public void Prepare() {
@@ -29,10 +28,8 @@ namespace Com.Unkor {
                 throw new DirectoryNotFoundException(
                     $"RootDirectory<{RootDirectory}>が無いから無理");
             }
-            KeyRoot = Path.Combine(RootDirectory, "Key");
+            KeyRoot = Path.Combine(RootDirectory, "Values");
             PrepareSubDirectory(KeyRoot);
-            ValueRoot = Path.Combine(RootDirectory, "Value");
-            PrepareSubDirectory(ValueRoot);
         }
 
         void PrepareSubDirectory(string dir) {
@@ -60,7 +57,6 @@ namespace Com.Unkor {
 
         void SwipeAll() {
             Swipe(KeyRoot);
-            Swipe(ValueRoot);
         }
 
         void Swipe(string dir) {
@@ -79,19 +75,24 @@ namespace Com.Unkor {
             return hex.ToString();
         }
 
+        string GenerateBaseName(byte[] hash) {
+            var dir = KeyRoot;
+            for (int i = 0; i < depth; ++i) {
+                dir = Path.Combine(dir, (hash[i] >> 4).ToString("X2"));
+            }
+            dir = Path.Combine(dir, ByteArrayToString(hash));
+            return dir;
+        }
+
         public bool ContainsPair(TKey key, TValue value) {
             var hkey = Encoding.Default.GetBytes(key.ToString());
             var hval = Encoding.Default.GetBytes(value.ToString());
             var hk = sha512.ComputeHash(hkey);
 
-            string dk = KeyRoot;
-            string dv = ValueRoot;
-            for (int i = 0; i < depth; ++i) {
-                dk = Path.Combine(dk, (hk[i] >> 4).ToString("X2"));
-                dv = Path.Combine(dv, (hk[i] >> 4).ToString("X2"));
-            }
-            dk = Path.Combine(dk, ByteArrayToString(hk));
-            dv = Path.Combine(dv, ByteArrayToString(hk));
+            var b = GenerateBaseName(hk);
+            string dk = b + ".key";
+            string dv = b + ".value";
+
             return (File.Exists(dk) && File.Exists(dv));
         }
 
@@ -99,11 +100,7 @@ namespace Com.Unkor {
             var hkey = Encoding.Default.GetBytes(key.ToString());
             var hk = sha512.ComputeHash(hkey);
 
-            string dk = KeyRoot;
-            for (int i = 0; i < depth; ++i) {
-                dk = Path.Combine(dk, (hk[i] >> 4).ToString("X2"));
-            }
-            dk = Path.Combine(dk, ByteArrayToString(hk));
+            var dk = GenerateBaseName(hk) + ".key";
             return (File.Exists(dk));
         }
 
@@ -112,14 +109,9 @@ namespace Com.Unkor {
             var hval = Encoding.Default.GetBytes(value.ToString());
             var hk = sha512.ComputeHash(hkey);
             //var hv = sha512.ComputeHash(hval);
-            string dk = KeyRoot;
-            string dv = ValueRoot;
-            for (int i = 0; i < depth; ++i) {
-                dk = Path.Combine(dk, (hk[i] >> 4).ToString("X2"));
-                dv = Path.Combine(dv, (hk[i] >> 4).ToString("X2"));
-            }
-            dk = Path.Combine(dk, ByteArrayToString(hk));
-            dv = Path.Combine(dv, ByteArrayToString(hk));
+            var b = GenerateBaseName(hk);
+            string dk = b + ".key";
+            string dv = b + ".value";
             if (!File.Exists(dk)) {
                 count++;
             }
@@ -136,14 +128,10 @@ namespace Com.Unkor {
             var hkey = Encoding.Default.GetBytes(key.ToString());
             var hk = sha512.ComputeHash(hkey);
             //var hv = sha512.ComputeHash(hval);
-            string dk = KeyRoot;
-            string dv = ValueRoot;
-            for (int i = 0; i < depth; ++i) {
-                dk = Path.Combine(dk, (hk[i] >> 4).ToString("X2"));
-                dv = Path.Combine(dv, (hk[i] >> 4).ToString("X2"));
-            }
-            dk = Path.Combine(dk, ByteArrayToString(hk));
-            dv = Path.Combine(dv, ByteArrayToString(hk));
+            var b = GenerateBaseName(hk);
+            string dk = b + ".key";
+            string dv = b + ".value";
+
             if (! File.Exists(dk)) {
                 throw new KeyNotFoundException();
             }
@@ -158,9 +146,9 @@ namespace Com.Unkor {
         }
 
         
-        public KeyValuePair<TKey, TValue> ReadKeyValueFromFile(string key, string value) {
-            key = Path.Combine(KeyRoot, key);
-            value = Path.Combine(ValueRoot, value);
+        public KeyValuePair<TKey, TValue> ReadKeyValueFromFile(string baseName) {
+            var key = Path.Combine(KeyRoot, baseName + ".key");
+            var  value = Path.Combine(KeyRoot, baseName + ".value");
             if (!File.Exists(key)) {
                 throw new FileNotFoundException($"Key無い<{key}>");
             }
@@ -204,14 +192,10 @@ namespace Com.Unkor {
             var hkey = Encoding.Default.GetBytes(key.ToString());
             var hk = sha512.ComputeHash(hkey);
 
-            string dk = KeyRoot;
-            string dv = ValueRoot;
-            for (int i = 0; i < depth; ++i) {
-                dk = Path.Combine(dk, (hk[i] >> 4).ToString("X2"));
-                dv = Path.Combine(dv, (hk[i] >> 4).ToString("X2"));
-            }
-            dk = Path.Combine(dk, ByteArrayToString(hk));
-            dv = Path.Combine(dv, ByteArrayToString(hk));
+            var b = GenerateBaseName(hk);
+            string dk = b + ".key";
+            string dv = b + ".value";
+
             if (!File.Exists(dk)) {
                 return false;
             }
@@ -266,8 +250,7 @@ namespace Com.Unkor {
         }
 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() =>
-            new KeyValueEnumerator<TKey, TValue>(KeyRoot, ValueRoot, depth, (k,v)=> ReadKeyValueFromFile(k,v));
-
+            new KeyValueEnumerator<TKey, TValue>(KeyRoot, depth, (k)=> ReadKeyValueFromFile(k));
 
         public bool Remove(TKey key) => RemoveKey(key);
 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Com.Unkor {
 
-    public delegate T ReadKeyValueDelegaty<T>(string key, string value);
+    public delegate T ReadKeyValueDelegaty<T>(string key);
     public delegate T ReadValueDelegaty<T>(string path);
 
     public class KeyValueEnumerator<K, V> : IEnumerator<KeyValuePair<K,V>>
@@ -37,15 +37,13 @@ namespace Com.Unkor {
         int fileIndex;
 
         string keyRoot;
-        string valueRoot;
         int depth;
         ReadKeyValueDelegaty<KeyValuePair<K, V>> ReadKey;
         //ReadValueDelegaty<V> ReadValue;
 
         public KeyValueEnumerator(
-            string root, string vr, int depth, ReadKeyValueDelegaty<KeyValuePair<K, V>> readKey) {
+            string root, int depth, ReadKeyValueDelegaty<KeyValuePair<K, V>> readKey) {
             this.keyRoot = root;
-            this.valueRoot = vr;
             this.depth = depth;
             dirMap = new List<string>();
             files = new List<string>();
@@ -63,7 +61,8 @@ namespace Com.Unkor {
                 if (index >= dirMap.Count) {
                     return false;
                 }
-                files.AddRange(Directory.GetFiles(AsKeyRoot(index)));
+                files.AddRange(
+                    from s in Directory.GetFiles(AsKeyRoot(index)) where s.EndsWith(".key") select s);
                 index++;
             }
             if (files.Count == 0) {
@@ -84,11 +83,7 @@ namespace Com.Unkor {
                 }
             }
 
-            var sp = files[fileIndex];
-            sp = sp.Substring(keyRoot.Length+1);
-            sp = Path.Combine(valueRoot, sp);
-
-            current = ReadKey(files[fileIndex], sp);
+            current = ReadKey(files[fileIndex].Substring(0, files[fileIndex].Length - ".key".Length));
 
             fileIndex++;
             return true;

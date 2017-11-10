@@ -33,7 +33,7 @@ namespace Runner {
         }
     }
     class Program {
-        const int KOUNT = 1000000;
+        const int KOUNT = 1000;
 
         static void InsertTest(IDictionary<StringableString, StringableString> dic) {
             var sb = new StringBuilder();
@@ -111,12 +111,6 @@ namespace Runner {
 
             sw.Reset();
             sw.Start();
-            RemoveTest(h);
-            sw.Stop();
-            Console.WriteLine($"Dictionary: Remove {sw.ElapsedMilliseconds} msec");
-
-            sw.Reset();
-            sw.Start();
             IterationTest(h);
             sw.Stop();
             Console.WriteLine($"Dictionary: Iteration {sw.ElapsedMilliseconds} msec");
@@ -132,6 +126,12 @@ namespace Runner {
             IterationTest3(h);
             sw.Stop();
             Console.WriteLine($"Dictionary: Iteration3 {sw.ElapsedMilliseconds} msec");
+
+            sw.Reset();
+            sw.Start();
+            //RemoveTest(h);
+            sw.Stop();
+            Console.WriteLine($"Dictionary: Remove {sw.ElapsedMilliseconds} msec");
         }
 
         static void RunFile() {
@@ -139,7 +139,7 @@ namespace Runner {
             long baseSize, curSize;
             var sw = new System.Diagnostics.Stopwatch();
 
-            var h = new FileDictionary<StringableString, StringableString>(@"C:\TMP\hash", 3);
+            var h = new FileDictionary<StringableString, StringableString>(@"C:\TMP\hash", 2);
             h.Prepare();
 
             baseSize = Environment.WorkingSet;
@@ -160,12 +160,6 @@ namespace Runner {
 
             sw.Reset();
             sw.Start();
-            RemoveTest(h);
-            sw.Stop();
-            Console.WriteLine($"Dictionary: Remove {sw.ElapsedMilliseconds} msec");
-
-            sw.Reset();
-            sw.Start();
             IterationTest(h);
             sw.Stop();
             Console.WriteLine($"Dictionary: Iteration {sw.ElapsedMilliseconds} msec");
@@ -181,12 +175,18 @@ namespace Runner {
             IterationTest3(h);
             sw.Stop();
             Console.WriteLine($"Dictionary: Iteration3 {sw.ElapsedMilliseconds} msec");
+
+            sw.Reset();
+            sw.Start();
+            RemoveTest(h);
+            sw.Stop();
+            Console.WriteLine($"Dictionary: Remove {sw.ElapsedMilliseconds} msec");
         }
 
 
         static void Main(string[] args) {
-            RunStdndard();
-            //RunFile();
+            //RunStdndard();
+            RunFile();
         }
     }
 }
