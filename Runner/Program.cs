@@ -33,7 +33,7 @@ namespace Runner {
         }
     }
     class Program {
-        const int KOUNT = 1000;
+        const int KOUNT = 1000000;
 
         static void InsertTest(IDictionary<StringableString, StringableString> dic) {
             var sb = new StringBuilder();
@@ -129,7 +129,7 @@ namespace Runner {
 
             sw.Reset();
             sw.Start();
-            //RemoveTest(h);
+            RemoveTest(h);
             sw.Stop();
             Console.WriteLine($"Dictionary: Remove {sw.ElapsedMilliseconds} msec");
         }
@@ -148,7 +148,7 @@ namespace Runner {
             InsertTest(h);
             sw.Stop();
             curSize = Environment.WorkingSet;
-           // Console.WriteLine($"FileDictionary: Add {sw.ElapsedMilliseconds} msec");
+            Console.WriteLine($"FileDictionary: Add {sw.ElapsedMilliseconds} msec");
             Console.WriteLine($"FileDictionary: heap {curSize - baseSize} byte ({(((double)curSize - (double)baseSize) / 1024 / 1024):0.0}) MB");
 
 
@@ -185,8 +185,8 @@ namespace Runner {
 
 
         static void Main(string[] args) {
-            //RunStdndard();
-            RunFile();
+            RunStdndard();
+            //RunFile();
         }
     }
 }

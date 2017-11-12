@@ -1,11 +1,16 @@
-Dictionary: Add 1567 msec
-Dictionary: heap 715603968 byte (682.5) MB
-Dictionary: Find 397 msec
-Dictionary: Remove 369 msec
-Dictionary: Iteration 2 msec
+Dictionary: Add 1594 msec
+Dictionary: heap 715120640 byte (682.0) MB
+Dictionary: Find 389 msec
+Dictionary: Iteration 7 msec
+Dictionary: Iteration2 8 msec
+Dictionary: Iteration3 12 msec
+Dictionary: Remove 376 msec
 
-FileDictionary: Add 836617 msec
-FileDictionary: heap 3665920 byte (3.5) MB
-Dictionary: Find 204582 msec
-Dictionary: Remove 389859 msec
-Dictionary: Iteration 7118 msec
+
+FileDictionary: Add 691311 msec
+FileDictionary: heap 4620288 byte (4.4) MB
+Dictionary: Find 160698 msec
+Dictionary: Iteration 144818 msec
+Dictionary: Iteration2 66171 msec
+Dictionary: Iteration3 218873 msec
+Dictionary: Remove 280426 msec

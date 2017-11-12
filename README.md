@@ -27,28 +27,28 @@ Key/Valueともに100byteのユニークな文字列を100万件
 
 |Add()|処理時間(msec)||
 |:---|:---|:---|
-|Dictionary|1,567||
-|FileDictionary|836,617|←まじすごい|
+|Dictionary|1,594||
+|FileDictionary|691,311|←まじすごい|
 
 
 |Remove()|処理時間(msec)||
 |:---|:---|:---|
-|Dictionary|369||
-|FileDictionary|389,859|←まじす(ry|
+|Dictionary|376||
+|FileDictionary|280,426|←まじす(ry|
 
 
 |Get(ｲﾝﾃﾞｸｻー100万ｲﾃﾚーﾄ)|処理時間(msec)||
 |:---|:---|:---|
 |Dictionary|369||
-|FileDictionary|204,582|←まじ(ry|
+|FileDictionary|160,698|←まじ(ry|
 
 
-|Keys()ｲﾃﾚーｼｮﾝ|処理時間(msec)||
+|foreachｲﾃﾚーｼｮﾝ|処理時間(msec)||
 |:---|:---|:---|
-|Dictionary|2||
-|FileDictionary|7,118|←ま(ry|
+|Dictionary|12||
+|FileDictionary|218,873|←ま(ry|
 
-System.Collections.Generic.Dictionary比500倍の処理時間で200分の1のﾒﾓﾘー消費という脅威の性能
+System.Collections.Generic.Dictionary比430倍の処理時間で200分の1のﾒﾓﾘー消費という脅威の性能
 ## すごい！
 
 ## ﾗｲｾﾝｽ
